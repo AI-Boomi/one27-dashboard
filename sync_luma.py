@@ -50,7 +50,8 @@ CITY_ALIASES = {"bangalore": "Bengaluru", "bengaluru": "Bengaluru", "blr": "Beng
                 "gurgaon": "Gurugram", "gurugram": "Gurugram", "noida": "Noida", "madras": "Chennai",
                 "hyderabad": "Hyderabad", "hyd": "Hyderabad", "pune": "Pune", "calcutta": "Kolkata",
                 "usa": "United States", "us": "United States", "united states of america": "United States",
-                "uk": "United Kingdom", "uae": "UAE", "india": "India"}
+                "uk": "United Kingdom", "uae": "UAE", "india": "India", "singapore": "Singapore"}
+COUNTRIES = {"India", "United States", "United Kingdom", "UAE", "Singapore", "Canada", "Germany", "Australia"}
 
 
 def get(path, params):
@@ -147,6 +148,114 @@ def answer_values(a):
 
 def question_label(a):
     return " ".join(str(a.get("label") or a.get("question") or a.get("question_label") or "").split())
+
+
+
+# ---------- How each registration question becomes a chart ----------
+SKIP_PHRASES = ("linkedin", "website", "url", "gst", "address", "consent", "certification", "if you chose other",
+                "please specify", "email", "phone", "mobile", "twitter", "github", "instagram", "teammate",
+                "colleague", "full name", "first name", "last name")
+SKIP_EXACT = {"company", "company name", "name", "organisation", "organization", "startup name"}
+RENAME = {
+    "industry": "Sector",
+    "number of employees": "Team size",
+    "where does ai sit in your product journey today?": "Where AI sits in the product",
+    "customer segment": "Customer segment",
+    "market geography": "Markets served",
+    "would you like to meet investors as part of vcbridge?": "Wants to meet investors (VCBridge)",
+    "would you like to be considered for the showcase on 4 march?": "Wants to be considered for The Showcase",
+}
+DIM_ORDER = ["Annual revenue (ARR)", "ARR band", "Funding raised", "Sector", "Team size", "Company age",
+             "Where AI sits in the product", "Customer segment", "Average contract value (ACV)", "Markets served",
+             "City", "Country", "Wants to meet investors (VCBridge)", "Wants to be considered for The Showcase",
+             "Seniority (from job title)", "Work or personal email"]
+INR_PER_USD = 85
+
+
+def parse_money(text):
+    """Turn '$1.5M', '250000', '1-5M', '50 lakh', 'Pre-revenue' into a USD number (lower end of a range)."""
+    t = text.lower().replace(",", "").replace("usd", "").replace("$", "").strip()
+    if not t:
+        return None
+    if any(w in t for w in ("pre-revenue", "pre revenue", "no revenue", "none", "nil", "bootstrapped", "not raised", "zero")) or t in ("0", "na", "n/a", "-"):
+        return 0.0
+    import re
+    m = re.search(r"(\d+(?:\.\d+)?)\s*(k|m|mn|mm|million|b|bn|billion|cr|crore|crores|l|lakh|lakhs|lac)?\b", t)
+    if not m:
+        return None
+    n = float(m.group(1))
+    unit = m.group(2) or ""
+    if not unit:  # a range like '1-5m' puts the unit after the second number
+        tail = re.search(r"\d\s*(k|m|mn|million|b|bn|cr|crore|lakh|lac)\b", t)
+        unit = tail.group(1) if tail else ""
+    mult = {"k": 1e3, "m": 1e6, "mn": 1e6, "mm": 1e6, "million": 1e6, "b": 1e9, "bn": 1e9, "billion": 1e9,
+            "cr": 1e7 / INR_PER_USD, "crore": 1e7 / INR_PER_USD, "crores": 1e7 / INR_PER_USD,
+            "l": 1e5 / INR_PER_USD, "lakh": 1e5 / INR_PER_USD, "lakhs": 1e5 / INR_PER_USD, "lac": 1e5 / INR_PER_USD}
+    return n * mult.get(unit, 1)
+
+
+def bucket(v, edges, labels):
+    for edge, label in zip(edges, labels):
+        if v < edge:
+            return label
+    return labels[-1]
+
+
+def parse_number(text):
+    import re
+    m = re.search(r"\d+", text.replace(",", ""))
+    return int(m.group()) if m else None
+
+
+def place(text):
+    return CITY_ALIASES.get(text.lower().strip(" .,"), text.strip(" .,").title())
+
+
+def transform(label, values, year):
+    """Return (chart name, answer) pairs for one question, or [] to leave it out."""
+    l = label.lower().strip()
+    if not l or l in SKIP_EXACT or any(p in l for p in SKIP_PHRASES):
+        return []
+    out = []
+    for v in values:
+        if "arr" in l.split() or "(arr" in l or "annual revenue" in l:
+            n = parse_money(v)
+            if n is None:
+                out.append(("Annual revenue (ARR)", "Not clear from answer"))
+                continue
+            out.append(("Annual revenue (ARR)", bucket(n, [1, 1e6, 5e6, 20e6, float("inf")],
+                                                       ["Pre-revenue", "Under $1M", "$1–5M", "$5–20M", "$20M+"])))
+            out.append(("ARR band", "$0–5M" if n < 5e6 else "$5M+"))
+        elif "acv" in l or "contract value" in l:
+            n = parse_money(v)
+            out.append(("Average contract value (ACV)", "Not clear from answer" if n is None else
+                        bucket(n, [1e3, 1e4, 5e4, 1e5, float("inf")], ["Under $1K", "$1–10K", "$10–50K", "$50–100K", "$100K+"])))
+        elif "funding" in l or "raised" in l:
+            n = parse_money(v)
+            out.append(("Funding raised", "Not clear from answer" if n is None else
+                        bucket(n, [1, 1e6, 5e6, 20e6, float("inf")],
+                               ["Bootstrapped / none", "Under $1M", "$1–5M", "$5–20M", "$20M+"])))
+        elif "employees" in l or "team size" in l:
+            n = parse_number(v)
+            out.append(("Team size", v if n is None else
+                        bucket(n, [11, 51, 201, 501, float("inf")], ["1–10", "11–50", "51–200", "201–500", "500+"])))
+        elif "founded" in l:
+            n = parse_number(v)
+            if n and 1900 < n <= year:
+                age = year - n
+                out.append(("Company age", bucket(age, [2, 5, 10, float("inf")],
+                                                  ["Under 2 years", "2–4 years", "5–9 years", "10+ years"])))
+        elif "location" in l or "city" in l or "country" in l or "based" in l:
+            parts = [x for x in (y.strip() for y in v.replace("/", ",").split(",")) if x]
+            if len(parts) >= 2:
+                out.append(("City", place(parts[0])))
+                out.append(("Country", place(parts[-1])))
+            elif parts:
+                p = place(parts[0])
+                out.append(("Country" if p in COUNTRIES else "City", p))
+        else:
+            out.append((RENAME.get(l, label), v[:60]))
+    return out
 
 
 SENIORITY = [
@@ -306,12 +415,8 @@ def main():
                         for v in answer_values(a):
                             answers[aud]["Seniority (from job title)"][seniority(v)] += 1
                         continue
-                    if not label or any(w in label.lower() for w in SKIP_WORDS):
-                        continue
-                    for v in answer_values(a):
-                        if any(w in label.lower() for w in ("city", "location", "country", "based")):
-                            v = CITY_ALIASES.get(v.lower().strip(" .,"), v.strip(" .,").title())
-                        answers[aud][label][v] += 1
+                    for dim, v in transform(label, answer_values(a), now.year):
+                        answers[aud][dim][v] += 1
             for a in g.get("registration_answers") or []:
                 qinfo[aud][question_label(a) or "(no label)"][type(a.get("answer", a.get("value"))).__name__] += 1
         print(f"{aud}: {seen} guests read. Statuses: {dict(raw_status)}. Tickets: {dict(raw_ticket)}")
@@ -372,7 +477,8 @@ def main():
                     print(f"   (skipped '{label}': free-text answers, too varied to chart)")
         if email_type[aud]:
             dims["Work or personal email"] = email_type[aud].most_common()
-        profile[aud] = dims
+        order = {k: i for i, k in enumerate(DIM_ORDER)}
+        profile[aud] = dict(sorted(dims.items(), key=lambda kv: order.get(kv[0], 50)))
 
     out = {
         "generated_at": now.isoformat(timespec="seconds"),
