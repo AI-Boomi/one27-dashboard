@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AIBoomi ONE ’27 registrations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F6FA; --panel:#FFFFFF; --ink:#152238; --muted:#5A657A;
+  --line:#DCE1EA; --line-strong:#AEB7C7;
+  --c-founders:#D9770A; --c-tech:#4A4FD1; --c-investors:#0E8A7C;
+  --s-approved:#152238; --s-pending:#A3ADBF; --s-waitlist:#CFAE52; --s-declined:#C4513A;
+  --focus:#4A4FD1;
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0E1524; --panel:#162036; --ink:#E9EDF5; --muted:#9AA6BC;
+    --line:#263250; --line-strong:#4D5A7C;
+    --c-founders:#F59A2E; --c-tech:#8E92F7; --c-investors:#2DC1AF;
+    --s-approved:#E9EDF5; --s-pending:#5D6B88; --s-waitlist:#D8BA62; --s-declined:#E2735B;
+    --focus:#8E92F7;
+    color-scheme: dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:baseline;justify-content:space-between;padding:28px 0 8px}
+.brand{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-0.01em}
+.brand small{font-weight:500;color:var(--muted);font-size:16px;margin-left:10px;letter-spacing:0}
+.status{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:14px}
+.badge{border:1px solid var(--s-waitlist);color:var(--ink);border-radius:999px;padding:2px 10px;font-size:13px}
+.badge.live{border-color:var(--c-investors)}
+
+/* hero */
+.hero{padding:40px 0 28px}
+.hero-num{font-family:var(--display);font-weight:800;font-size:clamp(96px,17vw,212px);line-height:.82;letter-spacing:-0.05em;font-variant-numeric:tabular-nums}
+.hero-line{font-family:var(--display);font-weight:700;font-size:clamp(28px,4.4vw,52px);line-height:1.05;letter-spacing:-0.02em;margin:10px 0 14px}
+.hero-sub{max-width:62ch;color:var(--muted);font-size:18px;margin:0 0 28px}
+.hero-sub b{color:var(--ink)}
+#dots{width:100%}
+#dots svg{display:block}
+.d-f{fill:var(--c-founders)} .d-t{fill:var(--c-tech)} .d-i{fill:var(--c-investors)}
+.d-p{fill:none;stroke:var(--line-strong);stroke-width:1}
+.legend{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:16px;font-size:15px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.sw.f{background:var(--c-founders)} .sw.t{background:var(--c-tech)} .sw.i{background:var(--c-investors)}
+.sw.p{border:1px solid var(--line-strong)}
+.sw.ap{background:var(--s-approved)} .sw.pe{background:var(--s-pending)} .sw.wl{background:var(--s-waitlist)} .sw.de{background:var(--s-declined)}
+.legend b{font-variant-numeric:tabular-nums}
+.marks-note{color:var(--muted);font-size:14px;margin-top:8px}
+
+/* sections */
+section{padding:44px 0 8px;border-top:1px solid var(--line);margin-top:36px}
+h2{font-family:var(--display);font-weight:700;font-size:30px;letter-spacing:-0.015em;line-height:1.15;margin:0 0 6px}
+.lede{color:var(--muted);margin:0 0 24px;max-width:70ch}
+
+/* week */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0;border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+.kpi{padding:18px 20px;border-right:1px solid var(--line)}
+.kpi:last-child{border-right:0}
+.kpi-label{color:var(--muted);font-size:14px}
+.kpi-val{font-family:var(--display);font-weight:800;font-size:40px;letter-spacing:-0.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi-sub{font-size:14px;color:var(--muted)}
+.up{color:var(--c-investors)} .down{color:var(--s-declined)}
+@media (max-width:760px){.kpi{border-right:0;border-bottom:1px solid var(--line)}.kpi:last-child{border-bottom:0}}
+
+/* status by audience */
+.srow{padding:16px 0;border-bottom:1px solid var(--line)}
+.srow:last-child{border-bottom:0}
+.srow-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.srow-name{font-family:var(--display);font-weight:700;font-size:20px;display:flex;align-items:center;gap:10px}
+.srow-meta{color:var(--muted);font-size:15px}
+.sbar{display:flex;height:18px;border-radius:5px;overflow:hidden;background:var(--line)}
+.sbar span{display:block;height:100%}
+.s-ap{background:var(--s-approved)} .s-pe{background:var(--s-pending)} .s-wl{background:var(--s-waitlist)} .s-de{background:var(--s-declined)}
+.snums{display:flex;flex-wrap:wrap;gap:4px 22px;margin-top:8px;font-size:15px;color:var(--muted)}
+.snums b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* timeline */
+.controls{display:flex;flex-wrap:wrap;gap:10px 18px;margin-bottom:14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--panel)}
+.seg button{border:0;background:none;padding:6px 14px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.chart-wrap{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 12px 8px}
+#timeline svg{display:block;overflow:visible}
+.grid line{stroke:var(--line)}
+.axis text{fill:var(--muted);font-size:12px;font-family:var(--body)}
+.b-f{fill:var(--c-founders)} .b-t{fill:var(--c-tech)} .b-i{fill:var(--c-investors)}
+.b-ok{fill:var(--s-approved)} .b-no{fill:var(--s-declined)}
+.hov{fill:transparent}
+.hov.on{fill:var(--line);opacity:.5}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:8px;padding:8px 12px;font-size:13px;line-height:1.45;min-width:150px;opacity:0;transition:opacity .12s}
+.tip b{font-variant-numeric:tabular-nums}
+.tip .row{display:flex;justify-content:space-between;gap:14px}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:15px}
+th,td{padding:11px 14px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;font-variant-numeric:tabular-nums}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+thead th{color:var(--muted);font-weight:400;font-size:14px}
+tr.group td{font-family:var(--display);font-weight:700;font-size:17px;text-align:left;padding-top:18px;border-bottom-color:transparent}
+tr.group td span{display:inline-flex;align-items:center;gap:10px}
+tr.total td{font-weight:700;border-bottom:0}
+td.later{color:var(--muted);text-align:left}
+.note{color:var(--muted);font-size:14px;margin-top:10px;max-width:80ch}
+
+/* bootcamp */
+.boot{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:28px;align-items:center}
+@media (max-width:760px){.boot{grid-template-columns:1fr}}
+.seats{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;max-width:520px}
+.seat{aspect-ratio:1;border-radius:3px;border:1px solid var(--line-strong)}
+.seat.on{background:var(--c-founders);border-color:var(--c-founders)}
+.boot-big{font-family:var(--display);font-weight:800;font-size:64px;line-height:1;letter-spacing:-0.03em}
+.boot-big small{font-size:28px;color:var(--muted);font-weight:500}
+
+/* review */
+.rev-kpis{margin-bottom:18px}
+.internal-tag{display:inline-block;font-size:13px;border:1px solid var(--s-declined);border-radius:999px;padding:1px 10px;margin-left:10px;vertical-align:middle;font-family:var(--body);font-weight:400}
+
+/* profile */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.pcard h3{font-family:var(--display);font-weight:700;font-size:19px;margin:0 0 12px}
+.brow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1.4fr) auto;gap:10px;align-items:center;font-size:15px;padding:4px 0}
+.brow .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btrack{height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+.bfill{height:100%;background:var(--ink);border-radius:5px}
+.brow .num{font-variant-numeric:tabular-nums;color:var(--muted);text-align:right;min-width:84px}
+.brow .num b{color:var(--ink)}
+.empty{color:var(--muted);padding:20px;border:1px dashed var(--line-strong);border-radius:14px}
+
+footer{border-top:1px solid var(--line);margin-top:48px;padding:24px 0 48px;color:var(--muted);font-size:14px}
+footer p{max-width:80ch;margin:0 0 8px}
+@media (max-width:520px){.wrap{padding:0 16px}h2{font-size:25px}.kpi-val{font-size:34px}}
+@media (prefers-reduced-motion:reduce){.tip{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">AIBoomi ONE ’27<small>2–5 March 2027, Bengaluru</small></div>
+    <div class="status"><span id="updated">Loading…</span><span id="badge" class="badge" hidden></span></div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-num" id="hero-num">—</div>
+    <p class="hero-line">people approved for ONE ’27</p>
+    <p class="hero-sub" id="hero-sub">Loading the latest registrations.</p>
+    <div id="dots" role="img" aria-label="Every square is one approved registration"></div>
+    <div class="legend" id="dot-legend"></div>
+    <div class="marks-note" id="marks-note"></div>
+  </div>
+
+  <section id="week">
+    <h2>The last seven days</h2>
+    <p class="lede">New applications and review decisions this week, compared with the week before.</p>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section id="status">
+    <h2>Where every application stands</h2>
+    <p class="lede">Every pass needs approval, so each application is approved, waiting for review, on the waitlist or declined. Approval rate is approved out of applications decided so far.</p>
+    <div id="status-rows"></div>
+    <div class="legend">
+      <span><i class="sw ap"></i>Approved</span><span><i class="sw pe"></i>Pending review</span>
+      <span><i class="sw wl"></i>Waitlist</span><span><i class="sw de"></i>Declined</span>
+    </div>
+  </section>
+
+  <section id="momentum">
+    <h2>Applications over time</h2>
+    <p class="lede" id="momentum-lede">Daily applications by audience since registrations opened.</p>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="What to show">
+        <button data-metric="apps" aria-pressed="true">Applications</button>
+        <button data-metric="decisions" aria-pressed="false">Decisions</button>
+      </div>
+      <div class="seg" role="group" aria-label="Time range">
+        <button data-range="7" aria-pressed="false">7 days</button>
+        <button data-range="30" aria-pressed="true">30 days</button>
+        <button data-range="all" aria-pressed="false">Since launch</button>
+      </div>
+    </div>
+    <div class="chart-wrap"><div id="timeline"></div><div class="tip" id="tip"></div></div>
+    <div class="legend" id="tl-legend"></div>
+  </section>
+
+  <section id="passes">
+    <h2>Every pass</h2>
+    <p class="lede">Applications and decisions for each pass and pricing tier, grouped by the Luma page people applied on.</p>
+    <div class="tbl-wrap"><table id="pass-table"></table></div>
+    <p class="note" id="pass-note"></p>
+  </section>
+
+  <section id="bootcamp">
+    <h2>ONE Bootcamp seats</h2>
+    <p class="lede">The residential Bootcamp in Devanahalli on 2–3 March is open to Builder+ applicants only, with a fixed number of seats.</p>
+    <div class="boot">
+      <div>
+        <div class="boot-big" id="boot-big">—</div>
+        <p id="boot-text" class="lede" style="margin-top:10px"></p>
+      </div>
+      <div class="seats" id="seats" role="img"></div>
+    </div>
+  </section>
+
+  <section id="review" hidden>
+    <h2>Review queue <span class="internal-tag">Team only</span></h2>
+    <p class="lede">Shown only in the team view. Applications still waiting for a decision, and the pace needed to clear them before the event.</p>
+    <div class="kpis rev-kpis" id="rev-kpis"></div>
+    <div class="tbl-wrap"><table id="rev-table"></table></div>
+  </section>
+
+  <section id="profile">
+    <h2>Who has been approved</h2>
+    <p class="lede" id="profile-lede">Built from registration answers of approved applicants only. Groups with fewer than 5 people are combined so no one can be singled out.</p>
+    <div class="controls"><div class="seg" role="group" aria-label="Audience" id="aud-seg"></div></div>
+    <div class="pgrid" id="pgrid"></div>
+  </section>
+
+  <footer>
+    <p id="source-note"></p>
+    <p>Counts only. No names, emails or phone numbers are included in this page.</p>
+  </footer>
+</div>
+
+<script>
+/* ---------- Settings ---------- */
+const DATA_URL = 'dashboard.json';   // your backend writes this file (or serves it from an API route)
+const REFRESH_MINUTES = 5;
+const MIN_GROUP = 5;                 // hide groups smaller than this on the public view
+const MAX_MARKS = 3000;              // hero grid caps at this many squares
+
+const AUD = [
+  {id:'founders',  name:'Founders',     long:'Founders & Ecosystem Leaders', cls:'f'},
+  {id:'tech',      name:'Tech leaders', long:'Tech Leaders & Researchers',   cls:'t'},
+  {id:'investors', name:'Investors',    long:'Investors',                    cls:'i'}
+];
+
+let DATA = null, SAMPLE = false, range = '30', metric = 'apps', profileAud = 'all';
+const isTeam = () => location.hash === '#team';
+
+/* ---------- Helpers ---------- */
+const $ = s => document.querySelector(s);
+const fmt = n => (n == null || isNaN(n)) ? '—' : Math.round(n).toLocaleString('en-IN');
+const pct = (a, b) => b ? Math.round(a / b * 100) + '%' : '—';
+const sum = (arr, f) => arr.reduce((s, x) => s + (f ? (f(x) || 0) : (x || 0)), 0);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dayLabel = iso => new Date(iso + 'T00:00:00Z').toLocaleDateString('en-IN', {day:'numeric', month:'short', timeZone:'UTC'});
+const byAud = id => DATA.passes.filter(p => p.audience === id);
+
+function totals(passes){
+  const t = {applied:0, approved:0, pending:0, waitlist:0, declined:0, headcount:0};
+  for (const p of passes){
+    for (const k of ['applied','approved','pending','waitlist','declined']) t[k] += p[k] || 0;
+    t.headcount += (p.headcount_approved ?? p.approved) || 0;
+  }
+  return t;
+}
+function niceMax(v){
+  const p = Math.pow(10, Math.floor(Math.log10(v)));
+  for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= v) return m * p;
+  return 10 * p;
+}
+
+/* ---------- Load ---------- */
+async function load(){
+  try {
+    const r = await fetch(DATA_URL, {cache:'no-store'});
+    if (!r.ok) throw new Error(r.status);
+    DATA = await r.json(); SAMPLE = false;
+  } catch (e) {
+    if (location.protocol !== 'file:') { showUnavailable(); return; }
+    DATA = buildSample(); SAMPLE = true;
+  }
+  render();
+}
+
+function showUnavailable(){
+  if (DATA) return;  // keep the last good numbers on screen
+  $('#updated').textContent = 'Live numbers unavailable';
+  $('#hero-num').textContent = '—';
+  $('#hero-sub').textContent = 'The latest registration numbers couldn’t be loaded. Refresh this page in a few minutes.';
+  document.querySelectorAll('section').forEach(s => s.hidden = true);
+}
+
+function render(){
+  renderHeader(); renderHero(); renderWeek(); renderStatus();
+  renderTimeline(); renderPasses(); renderBootcamp(); renderReview(); renderProfile(); renderFooter();
+}
+
+/* ---------- Header ---------- */
+function renderHeader(){
+  const d = new Date(DATA.generated_at);
+  $('#updated').textContent = 'Updated ' + d.toLocaleString('en-IN', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+  const b = $('#badge'); b.hidden = false;
+  const ageMin = (Date.now() - d) / 60000, delayed = !SAMPLE && ageMin > 60;
+  b.textContent = SAMPLE ? 'Sample data, not live' : delayed ? 'Delayed, last update ' + Math.round(ageMin / 60) + 'h ago' : (isTeam() ? 'Live, team view' : 'Live');
+  b.className = 'badge' + (SAMPLE || delayed ? '' : ' live');
+}
+
+/* ---------- Hero ---------- */
+function renderHero(){
+  const t = totals(DATA.passes);
+  $('#hero-num').textContent = fmt(t.approved);
+  const extra = t.headcount - t.approved;
+  $('#hero-sub').innerHTML =
+    `From <b>${fmt(t.applied)}</b> applications. <b>${fmt(t.pending)}</b> more are waiting for review.` +
+    (extra > 0 ? ` With Backer+ teammates, that’s <b>${fmt(t.headcount)}</b> people approved.` : '');
+  drawDots();
+  const leg = AUD.map(a => `<span><i class="sw ${a.cls}"></i>${a.name} <b>${fmt(totals(byAud(a.id)).approved)}</b></span>`).join('');
+  $('#dot-legend').innerHTML = leg + `<span><i class="sw p"></i>Waiting for review <b>${fmt(t.pending)}</b></span>`;
+}
+
+function drawDots(){
+  const box = $('#dots'), t = totals(DATA.passes);
+  const all = t.approved + t.pending;
+  const per = all > MAX_MARKS ? Math.ceil(all / MAX_MARKS) : 1;
+  const items = [];
+  for (const a of AUD){ const n = Math.round(totals(byAud(a.id)).approved / per); for (let i = 0; i < n; i++) items.push('d-' + a.cls); }
+  const np = Math.round(t.pending / per); for (let i = 0; i < np; i++) items.push('d-p');
+  const w = box.clientWidth || 900, small = w < 520;
+  const size = small ? 6 : 8, gap = small ? 2 : 3, step = size + gap;
+  const cols = Math.max(12, Math.floor((w + gap) / step));
+  const rows = Math.ceil(items.length / cols), W = cols * step - gap, H = Math.max(size, rows * step - gap);
+  let s = `<svg width="100%" viewBox="0 0 ${W} ${H}" aria-hidden="true">`;
+  items.forEach((c, i) => {
+    const x = (i % cols) * step, y = Math.floor(i / cols) * step;
+    s += c === 'd-p'
+      ? `<rect class="d-p" x="${x + .5}" y="${y + .5}" width="${size - 1}" height="${size - 1}" rx="2"/>`
+      : `<rect class="${c}" x="${x}" y="${y}" width="${size}" height="${size}" rx="2"/>`;
+  });
+  box.innerHTML = s + '</svg>';
+  $('#marks-note').textContent = per > 1
+    ? `Each square is ${per} registrations. Filled squares are approved, outlined squares are waiting for review.`
+    : 'Each square is one registration. Filled squares are approved, outlined squares are waiting for review.';
+}
+
+/* ---------- Week ---------- */
+function renderWeek(){
+  const d = DATA.daily, last = d.slice(-7), prev = d.slice(-14, -7);
+  const apps = r => sum(AUD, a => r[a.id]);
+  const a7 = sum(last, apps), p7 = sum(prev, apps), today = apps(d[d.length - 1] || {});
+  const ap7 = sum(last, r => r.approved), de7 = sum(last, r => r.declined);
+  const t = totals(DATA.passes);
+  const change = p7 ? Math.round((a7 - p7) / p7 * 100) : null;
+  const chg = change == null ? '' : `<span class="${change >= 0 ? 'up' : 'down'}">${change >= 0 ? '+' : '−'}${Math.abs(change)}%</span> vs the week before`;
+  const cards = [
+    ['New applications', a7, `${chg}${chg ? '. ' : ''}${fmt(today)} today`],
+    ['Approved this week', ap7, `${fmt(t.approved)} approved in total`],
+    ['Declined this week', de7, `${fmt(t.declined)} declined in total`],
+    ['Pending review now', t.pending, `${pct(t.pending, t.applied)} of all applications`],
+    ['On the waitlist', t.waitlist, 'Can be approved if seats open up']
+  ];
+  $('#kpis').innerHTML = cards.map(([l, v, s]) =>
+    `<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-val">${fmt(v)}</div><div class="kpi-sub">${s}</div></div>`).join('');
+}
+
+/* ---------- Status by audience ---------- */
+function statusRow(name, cls, t){
+  const w = k => t.applied ? (t[k] / t.applied * 100).toFixed(2) + '%' : '0';
+  return `<div class="srow">
+    <div class="srow-head"><div class="srow-name">${cls ? `<i class="sw ${cls}"></i>` : ''}${esc(name)}</div>
+      <div class="srow-meta">${fmt(t.applied)} applications, approval rate ${pct(t.approved, t.approved + t.declined)}</div></div>
+    <div class="sbar" aria-hidden="true"><span class="s-ap" style="width:${w('approved')}"></span><span class="s-pe" style="width:${w('pending')}"></span><span class="s-wl" style="width:${w('waitlist')}"></span><span class="s-de" style="width:${w('declined')}"></span></div>
+    <div class="snums"><span>Approved <b>${fmt(t.approved)}</b></span><span>Pending <b>${fmt(t.pending)}</b></span><span>Waitlist <b>${fmt(t.waitlist)}</b></span><span>Declined <b>${fmt(t.declined)}</b></span></div>
+  </div>`;
+}
+function renderStatus(){
+  $('#status-rows').innerHTML = statusRow('All audiences', '', totals(DATA.passes)) +
+    AUD.map(a => statusRow(a.long, a.cls, totals(byAud(a.id)))).join('');
+}
+
+/* ---------- Timeline ---------- */
+function renderTimeline(){
+  const box = $('#timeline'), tip = $('#tip');
+  let d = DATA.daily; if (range !== 'all') d = d.slice(-Number(range));
+  const keys = metric === 'apps'
+    ? AUD.map(a => ({k:a.id, cls:'b-' + a.cls, label:a.name, sw:a.cls}))
+    : [{k:'approved', cls:'b-ok', label:'Approved', sw:'ap'}, {k:'declined', cls:'b-no', label:'Declined', sw:'de'}];
+  $('#momentum-lede').textContent = metric === 'apps'
+    ? 'Daily applications by audience since registrations opened.'
+    : 'Daily review decisions: applications approved and declined.';
+  $('#tl-legend').innerHTML = keys.map(k => `<span><i class="sw ${k.sw}"></i>${k.label} <b>${fmt(sum(d, r => r[k.k]))}</b></span>`).join('') +
+    `<span>Total <b>${fmt(sum(d, r => sum(keys, k => r[k.k])))}</b></span>`;
+
+  const W = Math.max(280, box.clientWidth || 800), H = W < 520 ? 220 : 280;
+  const m = {t:10, r:6, b:26, l:38};
+  const tot = d.map(r => sum(keys, k => r[k.k]));
+  const max = niceMax(Math.max(4, ...tot));
+  const iw = W - m.l - m.r, ih = H - m.t - m.b, bw = iw / Math.max(1, d.length), bar = Math.max(1, bw * 0.72);
+  const y = v => m.t + ih * (1 - v / max);
+  let s = `<svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(metric === 'apps' ? 'Daily applications' : 'Daily decisions')}"><g class="grid axis">`;
+  for (let i = 0; i <= 4; i++){
+    const v = max / 4 * i, yy = y(v);
+    s += `<line x1="${m.l}" x2="${W - m.r}" y1="${yy}" y2="${yy}"/><text x="${m.l - 6}" y="${yy + 4}" text-anchor="end">${fmt(v)}</text>`;
+  }
+  s += '</g><g>';
+  d.forEach((r, i) => {
+    let acc = 0; const x = m.l + i * bw + (bw - bar) / 2;
+    for (const k of keys){ const v = r[k.k] || 0; if (!v) continue;
+      s += `<rect class="${k.cls}" x="${x}" y="${y(acc + v)}" width="${bar}" height="${y(acc) - y(acc + v)}"/>`; acc += v; }
+  });
+  s += '</g><g class="axis">';
+  const every = Math.ceil(d.length / (W < 520 ? 4 : 8));
+  d.forEach((r, i) => { if (i % every === 0 || i === d.length - 1 && d.length < 10)
+    s += `<text x="${m.l + i * bw + bw / 2}" y="${H - 6}" text-anchor="middle">${dayLabel(r.date)}</text>`; });
+  s += '</g><g>';
+  d.forEach((r, i) => { s += `<rect class="hov" data-i="${i}" x="${m.l + i * bw}" y="${m.t}" width="${bw}" height="${ih}"/>`; });
+  box.innerHTML = s + '</g></svg>';
+
+  const svg = box.querySelector('svg');
+  let on = null;
+  svg.addEventListener('mousemove', e => {
+    const el = e.target.closest('.hov'); if (!el) return;
+    if (on) on.classList.remove('on'); on = el; el.classList.add('on');
+    const r = d[+el.dataset.i];
+    tip.innerHTML = `<div><b>${esc(dayLabel(r.date))}</b></div>` +
+      keys.map(k => `<div class="row"><span>${k.label}</span><b>${fmt(r[k.k])}</b></div>`).join('') +
+      `<div class="row"><span>Total</span><b>${fmt(sum(keys, k => r[k.k]))}</b></div>`;
+    const wrap = box.parentElement.getBoundingClientRect();
+    let left = e.clientX - wrap.left + 14; const tw = tip.offsetWidth;
+    if (left + tw > wrap.width - 8) left = e.clientX - wrap.left - tw - 14;
+    tip.style.left = Math.max(8, left) + 'px'; tip.style.top = '16px'; tip.style.opacity = 1;
+  });
+  svg.addEventListener('mouseleave', () => { tip.style.opacity = 0; if (on) on.classList.remove('on'); on = null; });
+}
+
+/* ---------- Passes ---------- */
+function renderPasses(){
+  const head = `<thead><tr><th>Pass</th><th>Tier</th><th>Applications</th><th>Approved</th><th>Pending</th><th>Waitlist</th><th>Declined</th><th>Approval rate</th></tr></thead>`;
+  let body = '<tbody>';
+  for (const a of AUD){
+    body += `<tr class="group"><td colspan="8"><span><i class="sw ${a.cls}"></i>${a.long}</span></td></tr>`;
+    for (const p of byAud(a.id)){
+      if (p.upcoming){
+        body += `<tr><td>${esc(p.pass)}</td><td>${esc(p.tier)}</td><td class="later" colspan="6">Opens later${p.opens ? ', ' + esc(p.opens) : ''}</td></tr>`;
+      } else {
+        body += `<tr><td>${esc(p.pass)}</td><td>${esc(p.tier)}</td><td>${fmt(p.applied)}</td><td>${fmt(p.approved)}</td><td>${fmt(p.pending)}</td><td>${fmt(p.waitlist)}</td><td>${fmt(p.declined)}</td><td>${pct(p.approved, p.approved + p.declined)}</td></tr>`;
+      }
+    }
+  }
+  const t = totals(DATA.passes);
+  body += `<tr class="total"><td>All passes</td><td></td><td>${fmt(t.applied)}</td><td>${fmt(t.approved)}</td><td>${fmt(t.pending)}</td><td>${fmt(t.waitlist)}</td><td>${fmt(t.declined)}</td><td>${pct(t.approved, t.approved + t.declined)}</td></tr></tbody>`;
+  $('#pass-table').innerHTML = head + body;
+  const bp = DATA.passes.filter(p => p.pass === 'Backer+' && !p.upcoming);
+  const bpHeads = sum(bp, p => p.headcount_approved), bpRegs = sum(bp, p => p.approved);
+  $('#pass-note').textContent = bpRegs
+    ? `Backer+ covers up to 3 people per registration: ${fmt(bpRegs)} approved Backer+ registrations bring ${fmt(bpHeads)} people.`
+    : '';
+}
+
+/* ---------- Bootcamp ---------- */
+function renderBootcamp(){
+  const cap = DATA.event.bootcamp_cap || 80;
+  const bp = DATA.passes.filter(p => p.pass === 'Builder+' && !p.upcoming);
+  const ap = Math.min(cap, sum(bp, p => p.approved)), pe = sum(bp, p => p.pending);
+  const moved = DATA.review?.moved_to_builder || 0;
+  $('#boot-big').innerHTML = `${fmt(ap)}<small> of ${fmt(cap)} seats</small>`;
+  $('#boot-text').textContent = `${fmt(cap - ap)} seats left and ${fmt(pe)} Builder+ applications still to review.` +
+    (moved ? ` ${fmt(moved)} applicants not selected for Bootcamp have moved to the Builder pass.` : '');
+  $('#seats').setAttribute('aria-label', `${ap} of ${cap} Bootcamp seats filled`);
+  $('#seats').innerHTML = Array.from({length:cap}, (_, i) => `<i class="seat${i < ap ? ' on' : ''}"></i>`).join('');
+}
+
+/* ---------- Review queue (team view) ---------- */
+function renderReview(){
+  const sec = $('#review'); sec.hidden = !isTeam(); if (!isTeam()) return;
+  const t = totals(DATA.passes), rv = DATA.review || {};
+  const last = DATA.daily.slice(-7);
+  const dec7 = sum(last, r => r.approved + r.declined);
+  const deadline = new Date(DATA.event.review_deadline || '2027-03-01T00:00:00+05:30');
+  const daysLeft = Math.max(1, Math.ceil((deadline - new Date(DATA.generated_at)) / 864e5));
+  const cards = [
+    ['Pending now', fmt(t.pending), `${pct(t.pending, t.applied)} of applications`],
+    ['Decisions this week', fmt(dec7), `about ${fmt(dec7 / 7)} a day`],
+    ['Pace needed', fmt(Math.ceil(t.pending / daysLeft)), `decisions a day to clear the queue in ${fmt(daysLeft)} days`],
+    ['Oldest waiting', rv.oldest_pending_days != null ? fmt(rv.oldest_pending_days) + ' days' : '—', 'since the application came in'],
+    ['Average decision time', rv.avg_decision_days != null ? rv.avg_decision_days.toFixed(1) + ' days' : '—', 'from application to decision']
+  ];
+  $('#rev-kpis').innerHTML = cards.map(([l, v, s]) =>
+    `<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-val">${v}</div><div class="kpi-sub">${s}</div></div>`).join('');
+  const rows = DATA.passes.filter(p => !p.upcoming && p.pending).sort((a, b) => b.pending - a.pending);
+  const name = id => AUD.find(a => a.id === id)?.name || id;
+  $('#rev-table').innerHTML = `<thead><tr><th>Pass</th><th>Audience</th><th>Pending</th><th>Share of this pass</th><th>Share of the queue</th></tr></thead><tbody>` +
+    rows.map(p => `<tr><td>${esc(p.pass)}, ${esc(p.tier)}</td><td>${esc(name(p.audience))}</td><td>${fmt(p.pending)}</td><td>${pct(p.pending, p.applied)}</td><td>${pct(p.pending, t.pending)}</td></tr>`).join('') + '</tbody>';
+}
+
+/* ---------- Profile of approved attendees ---------- */
+function mergeDims(list){
+  const out = {};
+  for (const dims of list) for (const [dim, items] of Object.entries(dims || {})){
+    out[dim] = out[dim] || {};
+    for (const [label, n] of items) out[dim][label] = (out[dim][label] || 0) + n;
+  }
+  return Object.fromEntries(Object.entries(out).map(([k, v]) => [k, Object.entries(v)]));
+}
+function suppress(items){
+  if (isTeam()) return items;
+  const big = items.filter(([, n]) => n >= MIN_GROUP), small = items.filter(([, n]) => n < MIN_GROUP);
+  const s = sum(small, x => x[1]);
+  if (s > 0) big.push(['Smaller groups combined', s]);
+  return big;
+}
+function renderProfile(){
+  const P = DATA.profile;
+  const seg = $('#aud-seg');
+  seg.innerHTML = [['all', 'All approved'], ...AUD.map(a => [a.id, a.name])]
+    .map(([id, l]) => `<button data-aud="${id}" aria-pressed="${id === profileAud}">${l}</button>`).join('');
+  const grid = $('#pgrid');
+  if (!P){ grid.innerHTML = '<div class="empty">Audience analytics appear here once registration questions are mapped in the data sync.</div>'; return; }
+  let dims;
+  if (profileAud === 'all'){
+    const common = mergeDims(AUD.map(a => P[a.id]));
+    const shared = Object.keys(common).filter(k => AUD.every(a => P[a.id] && P[a.id][k]));
+    dims = {'Audience': AUD.map(a => [a.name, totals(byAud(a.id)).approved])};
+    for (const k of shared) dims[k] = common[k];
+  } else dims = Object.fromEntries(Object.entries(P[profileAud] || {}));
+  const cards = Object.entries(dims).map(([dim, items]) => {
+    const list = suppress([...items].sort((a, b) => b[1] - a[1]));
+    const total = sum(items, x => x[1]), max = Math.max(1, ...list.map(x => x[1]));
+    return `<div class="pcard"><h3>${esc(dim)}</h3>` + list.map(([l, n]) =>
+      `<div class="brow"><span class="lbl" title="${esc(l)}">${esc(l)}</span><span class="btrack"><span class="bfill" style="display:block;width:${(n / max * 100).toFixed(1)}%"></span></span><span class="num"><b>${fmt(n)}</b> ${pct(n, total)}</span></div>`).join('') + '</div>';
+  });
+  grid.innerHTML = cards.join('') || '<div class="empty">No approved attendees in this audience yet.</div>';
+}
+
+/* ---------- Footer ---------- */
+function renderFooter(){
+  $('#source-note').textContent = SAMPLE
+    ? `These are sample numbers so you can review the layout. The page switches to live data automatically once ${DATA_URL} is available next to it.`
+    : `Numbers come from the three AIBoomi ONE ’27 Luma pages (Founders, Tech Leaders and Investors) and refresh every ${REFRESH_MINUTES} minutes.`;
+}
+
+/* ---------- Events ---------- */
+document.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.range){ range = b.dataset.range; document.querySelectorAll('[data-range]').forEach(x => x.setAttribute('aria-pressed', x === b)); renderTimeline(); }
+  if (b.dataset.metric){ metric = b.dataset.metric; document.querySelectorAll('[data-metric]').forEach(x => x.setAttribute('aria-pressed', x === b)); renderTimeline(); }
+  if (b.dataset.aud){ profileAud = b.dataset.aud; renderProfile(); }
+});
+let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (DATA){ drawDots(); renderTimeline(); } }, 150); });
+window.addEventListener('hashchange', () => DATA && render());
+setInterval(() => { if (!SAMPLE) load().catch(() => {}); }, REFRESH_MINUTES * 60 * 1000);
+
+/* ---------- Sample data (used only when dashboard.json is missing) ---------- */
+function buildSample(){
+  let seed = 27; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  const allocate = (total, w) => {
+    const s = sum(w), raw = w.map(x => x / s * total), out = raw.map(Math.floor);
+    let rem = total - sum(out);
+    raw.map((r, i) => [r - out[i], i]).sort((a, b) => b[0] - a[0]).slice(0, rem).forEach(([, i]) => out[i]++);
+    return out;
+  };
+  const P = (audience, pass, tier, applied, approved, pending, waitlist, declined, extra) =>
+    Object.assign({audience, pass, tier, applied, approved, pending, waitlist, declined}, extra || {});
+  const U = (audience, pass) => ({audience, pass, tier:'Early Bird', upcoming:true, applied:0, approved:0, pending:0, waitlist:0, declined:0});
+  const passes = [
+    P('founders','Builder','Super Early Bird',1240,410,620,60,150),
+    P('founders','Builder+','Super Early Bird',380,52,298,0,30),
+    P('founders','Navigator','Super Early Bird',210,96,92,0,22),
+    U('founders','Builder'), U('founders','Builder+'), U('founders','Navigator'),
+    P('tech','Architect','Super Early Bird',420,150,220,10,40),
+    P('tech','Scholar','Super Early Bird',180,60,100,0,20),
+    P('tech','Navigator','Super Early Bird',90,40,42,0,8),
+    U('tech','Architect'), U('tech','Scholar'), U('tech','Navigator'),
+    P('investors','Backer','Super Early Bird',260,120,110,0,30),
+    P('investors','Backer+','Super Early Bird',70,38,26,0,6,{headcount_approved:99}),
+    U('investors','Backer'), U('investors','Backer+')
+  ];
+  const N = 35, dates = Array.from({length:N}, (_, i) => new Date(Date.UTC(2026, 9, 1 + i)).toISOString().slice(0, 10));
+  const appW = () => dates.map((d, i) => {
+    const wd = new Date(d + 'T00:00:00Z').getUTCDay();
+    return (1 + 5 * Math.exp(-i / 2.5) + i * 0.035) * (wd === 0 || wd === 6 ? 0.65 : 1) * (0.8 + rnd() * 0.4);
+  });
+  const ta = {}; for (const a of AUD) ta[a.id] = sum(passes.filter(p => p.audience === a.id), p => p.applied);
+  const series = {}; for (const a of AUD) series[a.id] = allocate(ta[a.id], appW());
+  const decW = () => dates.map((d, i) => i < 6 ? 0 : (1 + (i - 6) * 0.05) * (0.6 + rnd() * 0.8));
+  const t = totals(passes);
+  const appr = allocate(t.approved, decW()), decl = allocate(t.declined, decW());
+  const daily = dates.map((date, i) => ({date, founders:series.founders[i], tech:series.tech[i], investors:series.investors[i], approved:appr[i], declined:decl[i]}));
+
+  const dim = (total, obj) => { const ks = Object.keys(obj), v = allocate(total, Object.values(obj)); return ks.map((k, i) => [k, v[i]]); };
+  const af = totals(passes.filter(p => p.audience === 'founders')).approved;
+  const at = totals(passes.filter(p => p.audience === 'tech')).approved;
+  const ai = totals(passes.filter(p => p.audience === 'investors')).approved;
+  const city = {'Bengaluru':46,'Delhi NCR':14,'Mumbai':12,'Hyderabad':8,'Pune':6,'Chennai':5,'Other cities in India':6,'Outside India':3};
+  const common = n => ({
+    'City': dim(n, city),
+    'Work or personal email': dim(n, {'Work email':78,'Personal email':22}),
+    'Attended ONE ’26': dim(n, {'First time at ONE':68,'Came to ONE ’26':32})
+  });
+  const profile = {
+    founders: Object.assign({
+      'Role': dim(af, {'Founder / CEO':52,'Co-founder':28,'CXO':14,'Business head':6}),
+      'Annual revenue (ARR)': dim(af, {'Pre-revenue':18,'$0–1M':34,'$1–5M':31,'$5–20M':12,'$20M+':5}),
+      'Funding stage': dim(af, {'Bootstrapped':22,'Pre-seed / Seed':41,'Series A':24,'Series B and later':13}),
+      'Sector': dim(af, {'AI-native SaaS':48,'Fintech':12,'Consumer AI':11,'Robotics':9,'Other deeptech':9,'Health and biotech':8,'Spacetech':3})
+    }, common(af)),
+    tech: Object.assign({
+      'Role': dim(at, {'CTO / technical co-founder':34,'Engineering head':22,'Senior engineer':16,'Researcher / faculty':14,'PhD scholar':8,'GCC / industry leader':6}),
+      'Organisation type': dim(at, {'Startup':58,'Academia':18,'GCC':16,'Enterprise / model lab':8})
+    }, common(at)),
+    investors: Object.assign({
+      'Investor type': dim(ai, {'Early-stage VC':41,'Angel':34,'Family office':11,'Growth VC':8,'Corporate VC':6}),
+      'Stage focus': dim(ai, {'Pre-seed / Seed':46,'Series A':36,'Series B and later':18})
+    }, common(ai))
+  };
+  return {
+    generated_at: '2026-11-04T12:30:00+05:30',
+    event: {name:'AIBoomi ONE ’27', bootcamp_cap:80, review_deadline:'2027-03-01T00:00:00+05:30'},
+    passes, daily, profile,
+    review: {oldest_pending_days:29, avg_decision_days:6.4, moved_to_builder:38}
+  };
+}
+
+load();
+</script>
+</body>
+</html>
