@@ -254,7 +254,9 @@ def transform(label, values, year):
                 p = place(parts[0])
                 out.append(("Country" if p in COUNTRIES else "City", p))
         else:
-            out.append((RENAME.get(l, label), v[:60]))
+            # "AI-Native (AI is core to product value)" -> "AI-Native": keeps chart labels short
+            short = v.split(" (")[0].strip() if " (" in v and v.endswith(")") else v
+            out.append((RENAME.get(l, label), (short or v)[:60]))
     return out
 
 
