@@ -47,7 +47,8 @@ MAX_DISTINCT_ANSWERS = 20
 
 def get(path, params):
     url = f"{BASE}{path}?{urllib.parse.urlencode(params)}"
-    req = urllib.request.Request(url, headers={"x-luma-api-key": API_KEY, "accept": "application/json"})
+    req = urllib.request.Request(url, headers={"x-luma-api-key": API_KEY, "authorization": f"Bearer {API_KEY}",
+                                               "accept": "application/json"})
     for attempt in range(5):
         try:
             with urllib.request.urlopen(req, timeout=60) as r:
@@ -109,7 +110,7 @@ def scramble(guest_id):
 def main():
     if not API_KEY:
         sys.exit("LUMA_API_KEY is not set.")
-    print(f"Key check: {len(API_KEY)} characters, starts with 'secret-': {API_KEY.startswith('secret-')}, "
+    print(f"Key check: {len(API_KEY)} characters, looks like a full Luma key: {API_KEY.startswith(('secret-', 'luma_sk_')) and len(API_KEY) > 25}, "
           f"only plain characters: {API_KEY.isascii() and ' ' not in API_KEY}")
     try:
         me = get("/v1/user/get-self", {})
