@@ -16,7 +16,7 @@ import urllib.request
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
 
-API_KEY = os.environ.get("LUMA_API_KEY")
+API_KEY = (os.environ.get("LUMA_API_KEY") or "").strip()
 BASE = "https://public-api.luma.com"
 IST = timezone(timedelta(hours=5, minutes=30))
 
@@ -109,6 +109,21 @@ def scramble(guest_id):
 def main():
     if not API_KEY:
         sys.exit("LUMA_API_KEY is not set.")
+    print(f"Key check: {len(API_KEY)} characters, starts with 'secret-': {API_KEY.startswith('secret-')}, "
+          f"only plain characters: {API_KEY.isascii() and ' ' not in API_KEY}")
+    try:
+        me = get("/v1/user/get-self", {})
+        print("Luma accepted the key. Signed in as:", (me.get("user") or me).get("name", "(name hidden)"))
+    except urllib.error.HTTPError as e:
+        sys.exit(f"STOP: Luma rejected the key itself (HTTP {e.code}). The key is wrong, deleted, "
+                 "or the calendar has no active Luma Plus plan.")
+    for aud, event_id in EVENTS.items():
+        try:
+            get("/v1/event/get", {"event_id": event_id})
+            print(f"Access OK: {aud} event")
+        except urllib.error.HTTPError as e:
+            sys.exit(f"STOP: the key works, but it can't open the {aud} event (HTTP {e.code}). "
+                     "The key was probably created on a different calendar from the one that manages this event.")
     now = datetime.now(IST)
     today = now.date().isoformat()
 
