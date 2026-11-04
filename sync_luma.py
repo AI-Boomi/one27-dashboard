@@ -34,8 +34,10 @@ TIERS = ["Super Early Bird", "Early Bird"]
 BOOTCAMP_CAP = 80
 REVIEW_DEADLINE = "2027-03-01T00:00:00+05:30"
 
-STATUS_MAP = {"approved": "approved", "pending_approval": "pending",
-              "waitlist": "waitlist", "declined": "declined"}
+STATUS_MAP = {"approved": "approved", "going": "approved", "registered": "approved", "checked_in": "approved",
+              "pending_approval": "pending", "pending": "pending", "requested": "pending",
+              "waitlist": "waitlist", "waitlisted": "waitlist",
+              "declined": "declined", "rejected": "declined", "not_going": "declined"}
 PERSONAL_DOMAINS = {"gmail.com", "yahoo.com", "yahoo.co.in", "hotmail.com", "outlook.com",
                     "live.com", "icloud.com", "me.com", "proton.me", "protonmail.com",
                     "rediffmail.com", "aol.com", "zoho.com", "ymail.com"}
@@ -205,8 +207,13 @@ def main():
     new_state = {}
 
     for aud, event_id in EVENTS.items():
+        raw_status, raw_ticket, seen = Counter(), Counter(), 0
         for g in guests(event_id):
-            status = STATUS_MAP.get(g.get("approval_status"))
+            seen += 1
+            raw = str(g.get("approval_status") or g.get("status") or "none").lower()
+            raw_status[raw] += 1
+            raw_ticket[(g.get("event_ticket") or {}).get("name") or "none"] += 1
+            status = STATUS_MAP.get(raw)
             if not status:
                 continue
             pass_name, tier = split_ticket((g.get("event_ticket") or {}).get("name"))
@@ -252,6 +259,7 @@ def main():
                         continue
                     for v in answer_values(a):
                         answers[aud][label][v] += 1
+        print(f"{aud}: {seen} guests read. Statuses: {dict(raw_status)}. Tickets: {dict(raw_ticket)}")
 
     # Daily series from the first application to today
     days = sorted(apps_by_day)
