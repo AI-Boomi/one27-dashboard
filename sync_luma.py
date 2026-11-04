@@ -57,17 +57,41 @@ def get(path, params):
             if e.code == 429 or e.code >= 500:
                 time.sleep(2 ** attempt)
                 continue
+            try:
+                e.luma_message = e.read().decode("utf-8", "replace")[:300]
+            except Exception:
+                e.luma_message = ""
             raise
     raise RuntimeError(f"Luma kept refusing {path}")
+
+
+EVENT_PARAM = None
+
+
+def get_with_event(path, event_id, extra):
+    """Luma has used both event_api_id and event_id for this parameter; use whichever it accepts."""
+    global EVENT_PARAM
+    names = [EVENT_PARAM] if EVENT_PARAM else ["event_api_id", "event_id", "api_id"]
+    last = None
+    for name in names:
+        try:
+            result = get(path, {name: event_id, **extra})
+            EVENT_PARAM = name
+            return result
+        except urllib.error.HTTPError as e:
+            last = e
+            if e.code != 400:
+                raise
+    raise last
 
 
 def guests(event_id):
     cursor = None
     while True:
-        params = {"event_id": event_id, "pagination_limit": 100}
+        params = {"pagination_limit": 100}
         if cursor:
             params["pagination_cursor"] = cursor
-        page = get("/v1/event/get-guests", params)
+        page = get_with_event("/v1/event/get-guests", event_id, params)
         for entry in page.get("entries", []):
             yield entry.get("guest", entry)
         if not page.get("has_more"):
@@ -107,6 +131,38 @@ def scramble(guest_id):
     return hashlib.sha256(f"one27:{guest_id}".encode()).hexdigest()[:16]
 
 
+SLUGS = {"one27-founders": "founders", "one27-tech": "tech", "one27-investors": "investors"}
+
+
+def discover_events():
+    """Look up the three events on the calendar by their Luma link, so the ids are always right."""
+    found, cursor, pages = {}, None, 0
+    try:
+        while pages < 30:
+            params = {"pagination_limit": 50}
+            if cursor:
+                params["pagination_cursor"] = cursor
+            page = get("/v1/calendar/list-events", params)
+            pages += 1
+            for entry in page.get("entries", []):
+                ev = entry.get("event", entry)
+                slug = str(ev.get("url", "")).rstrip("/").split("/")[-1]
+                if slug in SLUGS:
+                    found[SLUGS[slug]] = ev.get("api_id") or ev.get("id")
+                    print(f"Found on calendar: {ev.get('name')} -> {found[SLUGS[slug]]}")
+            if not page.get("has_more") or len(found) == 3:
+                break
+            cursor = page.get("next_cursor")
+    except urllib.error.HTTPError as e:
+        print(f"Note: couldn't list calendar events (HTTP {e.code}): {getattr(e, 'luma_message', '')}")
+    for aud, eid in found.items():
+        if eid:
+            EVENTS[aud] = eid
+    missing = [a for a in SLUGS.values() if a not in found]
+    if missing:
+        print(f"Note: not found on this calendar by link, using saved ids for: {', '.join(missing)}")
+
+
 def main():
     if not API_KEY:
         sys.exit("LUMA_API_KEY is not set.")
@@ -118,13 +174,14 @@ def main():
     except urllib.error.HTTPError as e:
         sys.exit(f"STOP: Luma rejected the key itself (HTTP {e.code}). The key is wrong, deleted, "
                  "or the calendar has no active Luma Plus plan.")
+    discover_events()
     for aud, event_id in EVENTS.items():
         try:
-            get("/v1/event/get", {"event_id": event_id})
-            print(f"Access OK: {aud} event")
+            get_with_event("/v1/event/get-guests", event_id, {"pagination_limit": 1})
+            print(f"Access OK: {aud} event ({event_id}), using '{EVENT_PARAM}'")
         except urllib.error.HTTPError as e:
-            sys.exit(f"STOP: the key works, but it can't open the {aud} event (HTTP {e.code}). "
-                     "The key was probably created on a different calendar from the one that manages this event.")
+            sys.exit(f"STOP: can't read guests for the {aud} event {event_id} (HTTP {e.code}). "
+                     f"Luma said: {getattr(e, 'luma_message', '')}")
     now = datetime.now(IST)
     today = now.date().isoformat()
 
