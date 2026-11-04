@@ -45,6 +45,12 @@ PERSONAL_DOMAINS = {"gmail.com", "yahoo.com", "yahoo.co.in", "hotmail.com", "out
 SKIP_WORDS = ("name", "email", "phone", "mobile", "linkedin", "url", "website", "twitter",
               "github", "x handle", "instagram", "address", "teammate", "colleague")
 MAX_DISTINCT_ANSWERS = 20
+CITY_ALIASES = {"bangalore": "Bengaluru", "bengaluru": "Bengaluru", "blr": "Bengaluru",
+                "bombay": "Mumbai", "mumbai": "Mumbai", "new delhi": "Delhi", "delhi": "Delhi",
+                "gurgaon": "Gurugram", "gurugram": "Gurugram", "noida": "Noida", "madras": "Chennai",
+                "hyderabad": "Hyderabad", "hyd": "Hyderabad", "pune": "Pune", "calcutta": "Kolkata",
+                "usa": "United States", "us": "United States", "united states of america": "United States",
+                "uk": "United Kingdom", "uae": "UAE", "india": "India"}
 
 
 def get(path, params):
@@ -120,13 +126,47 @@ def split_ticket(name):
     return name, ""
 
 
+def _clean(x):
+    if isinstance(x, dict):
+        x = x.get("label") or x.get("value") or x.get("name") or ""
+    x = " ".join(str(x).split())[:60]
+    return x
+
+
 def answer_values(a):
-    v = a.get("answer", a.get("value"))
-    if v is None or v == "":
+    v = a.get("answer", a.get("value", a.get("answers")))
+    if v is None or v == "" or isinstance(v, bool):
         return []
+    if isinstance(v, dict):
+        return []  # handled separately (company / job title)
     if isinstance(v, list):
-        return [str(x).strip()[:60] for x in v if str(x).strip()]
-    return [str(v).strip()[:60]]
+        return [c for c in (_clean(x) for x in v) if c]
+    c = _clean(v)
+    return [c] if c else []
+
+
+def question_label(a):
+    return " ".join(str(a.get("label") or a.get("question") or a.get("question_label") or "").split())
+
+
+SENIORITY = [
+    ("Founder / Co-founder", ("founder", "co-founder", "cofounder")),
+    ("CEO / MD", ("ceo", "chief executive", "managing director", " md")),
+    ("CTO / Tech leader", ("cto", "chief technology", "vp engineering", "head of engineering", "engineering head")),
+    ("Other CXO", ("cxo", "coo", "cfo", "cpo", "cmo", "chief")),
+    ("VP / Director / Head", ("vp", "vice president", "director", "head")),
+    ("Investor / Partner", ("investor", "partner", "principal", "associate", "angel", "venture")),
+    ("Researcher / Academic", ("research", "professor", "faculty", "phd", "scientist", "scholar")),
+    ("Engineer / Manager", ("engineer", "developer", "manager", "lead", "architect")),
+]
+
+
+def seniority(title):
+    t = " " + title.lower()
+    for bucket, words in SENIORITY:
+        if any(w in t for w in words):
+            return bucket
+    return "Other roles"
 
 
 def scramble(guest_id):
@@ -203,6 +243,7 @@ def main():
     apps_by_day = defaultdict(Counter)
     answers = {aud: defaultdict(Counter) for aud in EVENTS}
     email_type = {aud: Counter() for aud in EVENTS}
+    qinfo = {aud: defaultdict(Counter) for aud in EVENTS}
     pending_ages, checked_in = [], Counter()
     new_state = {}
 
@@ -254,11 +295,25 @@ def main():
                     domain = email.split("@", 1)[1]
                     email_type[aud]["Personal email" if domain in PERSONAL_DOMAINS else "Work email"] += 1
                 for a in g.get("registration_answers") or []:
-                    label = (a.get("label") or "").strip()
+                    label = question_label(a)
+                    raw = a.get("answer", a.get("value"))
+                    if isinstance(raw, dict):
+                        title = raw.get("job_title") or raw.get("title") or ""
+                        if title:
+                            answers[aud]["Seniority (from job title)"][seniority(str(title))] += 1
+                        continue
+                    if label and "title" in label.lower() and "job" in label.lower():
+                        for v in answer_values(a):
+                            answers[aud]["Seniority (from job title)"][seniority(v)] += 1
+                        continue
                     if not label or any(w in label.lower() for w in SKIP_WORDS):
                         continue
                     for v in answer_values(a):
+                        if any(w in label.lower() for w in ("city", "location", "country", "based")):
+                            v = CITY_ALIASES.get(v.lower().strip(" .,"), v.strip(" .,").title())
                         answers[aud][label][v] += 1
+            for a in g.get("registration_answers") or []:
+                qinfo[aud][question_label(a) or "(no label)"][type(a.get("answer", a.get("value"))).__name__] += 1
         print(f"{aud}: {seen} guests read. Statuses: {dict(raw_status)}. Tickets: {dict(raw_ticket)}")
 
     # Daily series from the first application to today
@@ -298,9 +353,23 @@ def main():
     profile = {}
     for aud in EVENTS:
         dims = {}
+        print(f"{aud} registration questions (label: answer types):")
+        for label, types in qinfo[aud].items():
+            print(f"   - {label}: {dict(types)}")
         for label, counts in answers[aud].items():
-            if 2 <= len(counts) <= MAX_DISTINCT_ANSWERS:
+            total = sum(counts.values())
+            if not total:
+                continue
+            if len(counts) <= MAX_DISTINCT_ANSWERS:
                 dims[label] = counts.most_common()
+            else:
+                # Typed answers (e.g. city): keep if the top answers cover most people
+                top = counts.most_common(12)
+                covered = sum(n for _, n in top)
+                if covered / total >= 0.6:
+                    dims[label] = top + [("Other answers", total - covered)]
+                else:
+                    print(f"   (skipped '{label}': free-text answers, too varied to chart)")
         if email_type[aud]:
             dims["Work or personal email"] = email_type[aud].most_common()
         profile[aud] = dims

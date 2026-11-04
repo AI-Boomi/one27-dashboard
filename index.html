@@ -283,7 +283,7 @@ function niceMax(v){
 /* ---------- Load ---------- */
 async function load(){
   try {
-    const r = await fetch(DATA_URL, {cache:'no-store'});
+    const r = await fetch(DATA_URL + '?t=' + Date.now(), {cache:'no-store'});
     if (!r.ok) throw new Error(r.status);
     DATA = await r.json(); SAMPLE = false;
   } catch (e) {
@@ -526,11 +526,13 @@ function renderProfile(){
     .map(([id, l]) => `<button data-aud="${id}" aria-pressed="${id === profileAud}">${l}</button>`).join('');
   const grid = $('#pgrid');
   if (!P){ grid.innerHTML = '<div class="empty">Audience analytics appear here once registration questions are mapped in the data sync.</div>'; return; }
-  let dims;
+  let dims, ratioCard = '';
   if (profileAud === 'all'){
     const common = mergeDims(AUD.map(a => P[a.id]));
     const shared = Object.keys(common).filter(k => AUD.every(a => P[a.id] && P[a.id][k]));
     dims = {'Audience': AUD.map(a => [a.name, totals(byAud(a.id)).approved])};
+    const fN = totals(byAud('founders')).headcount, iN = totals(byAud('investors')).headcount;
+    ratioCard = iN ? `<div class="pcard"><h3>Founder-to-investor ratio</h3><div class="boot-big" style="font-size:52px">${(fN / iN).toFixed(1)}<small> : 1</small></div><p class="note">${fmt(fN)} approved founders for ${fmt(iN)} approved investors, counting Backer+ teammates.</p></div>` : '';
     for (const k of shared) dims[k] = common[k];
   } else dims = Object.fromEntries(Object.entries(P[profileAud] || {}));
   const cards = Object.entries(dims).map(([dim, items]) => {
@@ -539,7 +541,7 @@ function renderProfile(){
     return `<div class="pcard"><h3>${esc(dim)}</h3>` + list.map(([l, n]) =>
       `<div class="brow"><span class="lbl" title="${esc(l)}">${esc(l)}</span><span class="btrack"><span class="bfill" style="display:block;width:${(n / max * 100).toFixed(1)}%"></span></span><span class="num"><b>${fmt(n)}</b> ${pct(n, total)}</span></div>`).join('') + '</div>';
   });
-  grid.innerHTML = cards.join('') || '<div class="empty">No approved attendees in this audience yet.</div>';
+  grid.innerHTML = (ratioCard + cards.join('')) || '<div class="empty">No approved attendees in this audience yet.</div>';
 }
 
 /* ---------- Footer ---------- */
