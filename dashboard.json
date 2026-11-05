@@ -1,0 +1,339 @@
+{
+ "generated_at": "2026-11-05T12:14:20+05:30",
+ "event": {
+  "name": "AIBoomi ONE ’27",
+  "bootcamp_cap": 80,
+  "review_deadline": "2027-03-01T00:00:00+05:30"
+ },
+ "passes": [
+  {
+   "audience": "founders",
+   "pass": "Builder",
+   "tier": "Super Early Bird",
+   "applied": 1,
+   "approved": 1,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0
+  },
+  {
+   "audience": "founders",
+   "pass": "Builder+",
+   "tier": "Super Early Bird",
+   "applied": 1,
+   "approved": 1,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0
+  },
+  {
+   "audience": "founders",
+   "pass": "Navigator",
+   "tier": "Super Early Bird",
+   "applied": 0,
+   "approved": 0,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0,
+   "upcoming": true
+  },
+  {
+   "audience": "founders",
+   "pass": "Builder",
+   "tier": "Early Bird",
+   "applied": 0,
+   "approved": 0,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0,
+   "upcoming": true
+  },
+  {
+   "audience": "founders",
+   "pass": "Builder+",
+   "tier": "Early Bird",
+   "applied": 0,
+   "approved": 0,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0,
+   "upcoming": true
+  },
+  {
+   "audience": "founders",
+   "pass": "Navigator",
+   "tier": "Early Bird",
+   "applied": 0,
+   "approved": 0,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0,
+   "upcoming": true
+  },
+  {
+   "audience": "tech",
+   "pass": "Architect",
+   "tier": "Super Early Bird",
+   "applied": 0,
+   "approved": 0,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0,
+   "upcoming": true
+  },
+  {
+   "audience": "tech",
+   "pass": "Scholar",
+   "tier": "Super Early Bird",
+   "applied": 0,
+   "approved": 0,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0,
+   "upcoming": true
+  },
+  {
+   "audience": "tech",
+   "pass": "Navigator",
+   "tier": "Super Early Bird",
+   "applied": 0,
+   "approved": 0,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0,
+   "upcoming": true
+  },
+  {
+   "audience": "tech",
+   "pass": "Architect",
+   "tier": "Early Bird",
+   "applied": 0,
+   "approved": 0,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0,
+   "upcoming": true
+  },
+  {
+   "audience": "tech",
+   "pass": "Scholar",
+   "tier": "Early Bird",
+   "applied": 0,
+   "approved": 0,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0,
+   "upcoming": true
+  },
+  {
+   "audience": "tech",
+   "pass": "Navigator",
+   "tier": "Early Bird",
+   "applied": 0,
+   "approved": 0,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0,
+   "upcoming": true
+  },
+  {
+   "audience": "investors",
+   "pass": "Backer",
+   "tier": "Super Early Bird",
+   "applied": 0,
+   "approved": 0,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0,
+   "upcoming": true
+  },
+  {
+   "audience": "investors",
+   "pass": "Backer+",
+   "tier": "Super Early Bird",
+   "applied": 0,
+   "approved": 0,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0,
+   "headcount_approved": 0,
+   "upcoming": true
+  },
+  {
+   "audience": "investors",
+   "pass": "Backer",
+   "tier": "Early Bird",
+   "applied": 0,
+   "approved": 0,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0,
+   "upcoming": true
+  },
+  {
+   "audience": "investors",
+   "pass": "Backer+",
+   "tier": "Early Bird",
+   "applied": 0,
+   "approved": 0,
+   "pending": 0,
+   "waitlist": 0,
+   "declined": 0,
+   "headcount_approved": 0,
+   "upcoming": true
+  }
+ ],
+ "daily": [
+  {
+   "date": "2026-11-04",
+   "founders": 2,
+   "tech": 0,
+   "investors": 0,
+   "approved": 0,
+   "declined": 0
+  },
+  {
+   "date": "2026-11-05",
+   "founders": 0,
+   "tech": 0,
+   "investors": 0,
+   "approved": 0,
+   "declined": 0
+  }
+ ],
+ "profile": {
+  "founders": {
+   "Annual revenue (ARR)": [
+    [
+     "Pre-revenue",
+     2
+    ]
+   ],
+   "ARR band": [
+    [
+     "$0–5M",
+     2
+    ]
+   ],
+   "Funding raised": [
+    [
+     "Bootstrapped / none",
+     2
+    ]
+   ],
+   "Sector": [
+    [
+     "Other",
+     2
+    ]
+   ],
+   "Team size": [
+    [
+     "Solopreneur",
+     1
+    ],
+    [
+     "1–10",
+     1
+    ]
+   ],
+   "Company age": [
+    [
+     "Under 2 years",
+     2
+    ]
+   ],
+   "Where AI sits in the product": [
+    [
+     "AI-Native",
+     1
+    ],
+    [
+     "AI-Enabled",
+     1
+    ]
+   ],
+   "Customer segment": [
+    [
+     "Mid market",
+     2
+    ],
+    [
+     "SMB",
+     1
+    ],
+    [
+     "Enterprise",
+     1
+    ],
+    [
+     "Prosumer",
+     1
+    ]
+   ],
+   "Average contract value (ACV)": [
+    [
+     "$1–10K",
+     2
+    ]
+   ],
+   "Markets served": [
+    [
+     "India",
+     1
+    ],
+    [
+     "US",
+     1
+    ],
+    [
+     "Global",
+     1
+    ]
+   ],
+   "City": [
+    [
+     "Bengaluru",
+     1
+    ],
+    [
+     "Houston Usa",
+     1
+    ]
+   ],
+   "Wants to meet investors (VCBridge)": [
+    [
+     "No",
+     1
+    ],
+    [
+     "Yes",
+     1
+    ]
+   ],
+   "Wants to be considered for The Showcase": [
+    [
+     "Maybe, I'd like to know more",
+     1
+    ],
+    [
+     "Yes, consider my startup",
+     1
+    ]
+   ],
+   "Work or personal email": [
+    [
+     "Work email",
+     2
+    ]
+   ]
+  },
+  "tech": {},
+  "investors": {}
+ },
+ "checked_in": {},
+ "review": {
+  "oldest_pending_days": null,
+  "avg_decision_days": null
+ }
+}
