@@ -243,7 +243,9 @@ footer p{max-width:80ch;margin:0 0 8px}
 
 <script>
 /* ---------- Settings ---------- */
-const DATA_URL = 'dashboard.json';   // your backend writes this file (or serves it from an API route)
+const DATA_URL = 'dashboard.json';   // copy published with the page
+// Latest numbers straight from the repository; refreshes within ~5 minutes even if the page itself is served from an old cache
+const LIVE_URL = 'https://raw.githubusercontent.com/AI-Boomi/one27-dashboard/main/dashboard.json';
 const REFRESH_MINUTES = 5;
 const MIN_GROUP = 5;                 // hide groups smaller than this on the public view
 const MAX_MARKS = 3000;              // hero grid caps at this many squares
@@ -283,9 +285,17 @@ function niceMax(v){
 /* ---------- Load ---------- */
 async function load(){
   try {
-    const r = await fetch(DATA_URL + '?t=' + Date.now(), {cache:'no-store'});
-    if (!r.ok) throw new Error(r.status);
-    DATA = await r.json(); SAMPLE = false;
+    let best = null;
+    for (const url of [LIVE_URL, DATA_URL]) {
+      try {
+        const r = await fetch(url + '?t=' + Date.now(), {cache:'no-store'});
+        if (!r.ok) continue;
+        const d = await r.json();
+        if (!best || new Date(d.generated_at) > new Date(best.generated_at)) best = d;
+      } catch (_) {}
+    }
+    if (!best) throw new Error('no data');
+    DATA = best; SAMPLE = false;
   } catch (e) {
     if (location.protocol !== 'file:') { showUnavailable(); return; }
     DATA = buildSample(); SAMPLE = true;
