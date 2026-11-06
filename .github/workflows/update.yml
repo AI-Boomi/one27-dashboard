@@ -7,8 +7,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: dashboard
@@ -18,9 +16,6 @@ jobs:
   update:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -28,29 +23,48 @@ jobs:
         with:
           python-version: "3.12"
 
+      # Review history is kept in GitHub's private cache, not in the public repository
+      - name: Restore review history
+        uses: actions/cache/restore@v4
+        with:
+          path: state.json
+          key: review-state-${{ github.run_id }}
+          restore-keys: review-state-
+
+      # Output is kept out of the public log; only the last lines are shown if something fails
       - name: Pull latest numbers from Luma
-        run: python sync_luma.py
+        run: |
+          python sync_luma.py > sync.log 2>&1 || (tail -n 5 sync.log; exit 1)
+          echo "Numbers updated."
         env:
           LUMA_API_KEY: ${{ secrets.LUMA_API_KEY }}
 
-      - name: Save review history and latest numbers
+      - name: Save review history
+        uses: actions/cache/save@v4
+        with:
+          path: state.json
+          key: review-state-${{ github.run_id }}
+
+      # Removes the numbers that earlier versions saved in the public repository
+      - name: Remove old public data files
         continue-on-error: true
         run: |
-          git config user.name "dashboard-bot"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add state.json dashboard.json
-          git diff --cached --quiet || (git commit -m "Update review history" && git pull --rebase && git push)
+          if git ls-files --error-unmatch dashboard.json state.json >/dev/null 2>&1 || git ls-files | grep -qE '^(dashboard|state)\.json$'; then
+            git config user.name "dashboard-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git rm --cached --ignore-unmatch dashboard.json state.json
+            git commit -m "Stop storing dashboard numbers in the repository"
+            git pull --rebase && git push
+          fi
 
       - name: Prepare site
         run: |
-          echo "This update's numbers were generated at:"
-          grep -m1 generated_at dashboard.json
           mkdir -p site
           cp index.html dashboard.json site/
 
-      - uses: actions/upload-pages-artifact@v3
+      - name: Publish to Cloudflare (private, behind login)
+        uses: cloudflare/wrangler-action@v3
         with:
-          path: site
-
-      - id: deploy
-        uses: actions/deploy-pages@v4
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy site --project-name=one27-dashboard --branch=main --commit-dirty=true
