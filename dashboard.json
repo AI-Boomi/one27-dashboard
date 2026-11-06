@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-06T23:55:24+05:30",
+ "generated_at": "2026-11-07T00:00:37+05:30",
  "event": {
   "name": "AIBoomi ONE ’27",
   "bootcamp_cap": 80,
@@ -202,6 +202,14 @@
   },
   {
    "date": "2026-11-06",
+   "founders": 0,
+   "tech": 0,
+   "investors": 0,
+   "approved": 0,
+   "declined": 0
+  },
+  {
+   "date": "2026-11-07",
    "founders": 0,
    "tech": 0,
    "investors": 0,
