@@ -244,8 +244,7 @@ footer p{max-width:80ch;margin:0 0 8px}
 <script>
 /* ---------- Settings ---------- */
 const DATA_URL = 'dashboard.json';   // copy published with the page
-// Latest numbers straight from the repository; refreshes within ~5 minutes even if the page itself is served from an old cache
-const LIVE_URL = 'https://raw.githubusercontent.com/AI-Boomi/one27-dashboard/main/dashboard.json';
+
 const REFRESH_MINUTES = 5;
 const MIN_GROUP = 5;                 // hide groups smaller than this on the public view
 const MAX_MARKS = 3000;              // hero grid caps at this many squares
@@ -286,7 +285,7 @@ function niceMax(v){
 async function load(){
   try {
     let best = null;
-    for (const url of [LIVE_URL, DATA_URL]) {
+    for (const url of [DATA_URL]) {
       try {
         const r = await fetch(url + '?t=' + Date.now(), {cache:'no-store'});
         if (!r.ok) continue;
